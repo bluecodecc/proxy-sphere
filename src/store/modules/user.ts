@@ -6,8 +6,8 @@ import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
+import { GetUserInfoModel, LoginParams, RegisterParams } from '/@/api/sys/model/userModel';
+import { doLogout, getUserInfo, loginApi, registerApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
@@ -121,6 +121,19 @@ export const useUserStore = defineStore({
         goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
       }
       return userInfo;
+    },
+
+    async register(
+      params: RegisterParams & {
+        mode?: ErrorMessageMode;
+      },
+    ): Promise<boolean | null> {
+      try {
+        const { mode, ...registerParams } = params;
+        return await registerApi(registerParams, mode);
+      } catch (error) {
+        return Promise.reject(error);
+      }
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;

@@ -1,9 +1,10 @@
 import { defHttp } from '/@/utils/http/axios';
-import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
+import { LoginParams, LoginResultModel, GetUserInfoModel, RegisterParams } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
 
 enum Api {
+  User = '/user',
   Login = '/login',
   Logout = '/logout',
   GetUserInfo = '/getUserInfo',
@@ -18,6 +19,18 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
   return defHttp.post<LoginResultModel>(
     {
       url: Api.Login,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  );
+}
+
+export function registerApi(params: RegisterParams, mode: ErrorMessageMode = 'modal') {
+  return defHttp.post<boolean>(
+    {
+      url: Api.User,
       params,
     },
     {
